@@ -1,0 +1,9 @@
+{
+  "title": "My Vue Wallpaper",
+  "description": "Vue-based checklist and clock",
+  "file": "index.html",
+  "type": "web",
+  "general": {
+    "properties": {}
+  }
+}

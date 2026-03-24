@@ -1,0 +1,37 @@
+@import './base.css';
+
+body {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  grid-auto-columns: 1fr;
+  gap: 27px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  background-color: rgb(30, 31, 34);
+  text-align: left;
+}
+
+#app {
+  display: flex;
+  flex-flow: row;
+  gap: 27px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
