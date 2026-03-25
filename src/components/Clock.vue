@@ -181,7 +181,7 @@ const year = computed(() => {
   width: 340px;
   height: 400px;
   border-style: solid;
-  border-width: 10px;
+  border-width: 8px;
   border-color: rgb(81, 87, 98);
   border-radius: 30px;
   align-content: center;

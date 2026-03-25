@@ -213,7 +213,7 @@ const addTask = () => {
   max-height: 300px;
   height: 100%;
   border-style: solid;
-  border-width: 10px;
+  border-width: 8px;
   border-color: rgb(81, 87, 98);
   border-radius: 30px;
   align-content: center;
@@ -230,7 +230,7 @@ const addTask = () => {
   max-height: 600px;
   height: 100%;
   border-style: solid;
-  border-width: 10px;
+  border-width: 8px;
   border-color: rgb(81, 87, 98);
   border-radius: 30px;
   align-content: center;
