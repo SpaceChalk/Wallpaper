@@ -7,8 +7,30 @@ const tasks = ref([]);
 
 onMounted(() => {
   const savedTasks = localStorage.getItem('my-wallpaper-tasks');
+
   if (savedTasks) {
-    tasks.value = JSON.parse(savedTasks);
+    const parsed = JSON.parse(savedTasks);
+
+    if (Array.isArray(parsed) && parsed.length > 0) {
+
+      tasks.value = parsed;
+    } else {
+
+      tasks.value.push({
+        id: Date.now(),
+        text: "none",
+        isExiting: false,
+        isEntering: false
+      });
+    }
+  } else {
+
+    tasks.value.push({
+      id: Date.now(),
+      text: "none",
+      isExiting: false,
+      isEntering: false
+    });
   }
 });
 
