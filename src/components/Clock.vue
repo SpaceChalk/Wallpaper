@@ -59,7 +59,7 @@ const year = computed(() => {
         <div class="left-content">
           <span class="variable-box">let</span>
           <div class="appendage-container">
-            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">}</span>
+            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">]</span>
             <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">;</span>
           </div>
         </div>
@@ -69,7 +69,7 @@ const year = computed(() => {
             <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">clock</span>
             <span
                 style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-right: 10px; padding-left: 10px">=</span>
-            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">{</span>
+            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">[</span>
           </div>
 
           <div class="content-row">
@@ -136,6 +136,8 @@ const year = computed(() => {
         </div>
       </div>
     </div>
+
+
   </div>
 </template>
 

@@ -56,7 +56,7 @@ const addTask = () => {
         <div class="left-content" :style="{ height: spaces }">
           <span class="variable-box">let</span>
           <div class="appendage-container">
-            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">}</span>
+            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">]</span>
             <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">;</span>
           </div>
         </div>
@@ -67,7 +67,7 @@ const addTask = () => {
             <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">todo</span>
             <span
                 style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-right: 10px; padding-left: 10px">=</span>
-            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">{</span>
+            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">[</span>
           </div>
 
           <transition-group name="typeout" tag="div" v-if="tasks.length" appear>
@@ -98,7 +98,7 @@ const addTask = () => {
       </div>
     </div>
 
-    <div class="block-tag" style="margin-top: 20px">
+    <div class="block-tag" style="margin-top: 20px; width: 140px">
       <span>newTask.js</span>
       <div class="circle"></div>
     </div>
@@ -116,8 +116,11 @@ const addTask = () => {
         <div class="content-box">
           <div class="start">
             <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">newToDo</span>
-            <span
-                style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-right: 10px; padding-left: 10px">=</span>
+            <span style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-right: 10px; padding-left: 10px">=</span>
+            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">(</span>
+            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">)</span>
+            <span style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-left: 10px">=</span>
+            <span style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-right: 10px">></span>
             <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">{</span>
           </div>
 
