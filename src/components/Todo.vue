@@ -1,40 +1,87 @@
 <script setup>
-import {computed, ref} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 
 const hoveredId = ref(null);
-const upHere = ref(false);
 const newTaskText = ref("");
 const tasks = ref([]);
 
-const spaces = computed(() => {
-  const minHeight = 34;
-  const interval = 10;
-
-  if(tasks.value.length < 2) {
-    return minHeight + "%";
+onMounted(() => {
+  const savedTasks = localStorage.getItem('my-wallpaper-tasks');
+  if (savedTasks) {
+    tasks.value = JSON.parse(savedTasks);
   }
-  const calculatedHeight = (tasks.value.length * interval) + 25;
+});
 
-  return calculatedHeight < 500 ? `${calculatedHeight}%` : '500px';
-})
-
-const hovered = computed(() => {
-  return upHere.value ? 1 : 0;
-})
-const removeCursor = (el) => {
-  el.style.borderRightColor = 'transparent';
-};
+watch(tasks, (newTasks) => {
+  localStorage.setItem('my-wallpaper-tasks', JSON.stringify(newTasks));
+}, {deep: true});
 
 const removeTask = (taskId) => {
-  tasks.value = tasks.value.filter(task => task.id !== taskId);
-}
+  const task = tasks.value.find(t => t.id === taskId);
+  if (!task) return;
+
+  if (tasks.value.length === 1) {
+    task.isExiting = true;
+    task.isEntering = false;
+
+    setTimeout(() => {
+      task.text = "none";
+      task.isExiting = false;
+
+      nextTick(() => {
+        task.isEntering = true;
+
+        setTimeout(() => {
+          task.isEntering = false;
+        }, 1000);
+      });
+
+      localStorage.setItem('my-wallpaper-tasks', JSON.stringify(tasks.value));
+    }, 1500);
+
+    return;
+  }
+
+  tasks.value = tasks.value.filter(t => t.id !== taskId);
+};
 
 const addTask = () => {
   if (newTaskText.value.trim() === "") return;
+  if (tasks.value.length === 10) return;
+
+  console.log("part 1: ", tasks.value[0].text)
+
+  if(tasks.value.length === 1 && tasks.value[0].text === "none") {
+    const firstTask = tasks.value[0];
+
+    firstTask.isExiting = true;
+    firstTask.isEntering = false;
+
+    setTimeout(() => {
+      firstTask.text = newTaskText.value.trim();
+      firstTask.isExiting = false;
+
+      newTaskText.value = "";
+
+      nextTick(() => {
+        firstTask.isEntering = true;
+
+        setTimeout(() => {
+          firstTask.isEntering = false;
+        }, 1000);
+      });
+
+      localStorage.setItem('my-wallpaper-tasks', JSON.stringify(tasks.value));
+    }, 1500);
+
+    return;
+  }
 
   tasks.value.push({
     id: Date.now(),
-    text: newTaskText.value
+    text: newTaskText.value.trim(),
+    isExiting: false,
+    isEntering: false
   });
 
   newTaskText.value = "";
@@ -47,60 +94,55 @@ const addTask = () => {
 
     <div class="block-tag">
       <span>tasks.js</span>
-      <div class="circle"></div>
+      <div class="circle" style="margin: 0"></div>
     </div>
 
     <div class="block">
       <div class="block-content">
-
-        <div class="left-content" :style="{ height: spaces }">
-          <span class="variable-box">let</span>
-          <div class="appendage-container">
-            <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">]</span>
-            <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">;</span>
-          </div>
-        </div>
+        <span class="variable-box">let</span>
 
         <div class="content-box">
 
-          <div class="start">
+          <div>
             <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">todo</span>
             <span
                 style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-right: 10px; padding-left: 10px">=</span>
             <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">[</span>
           </div>
+        </div>
+      </div>
+      <transition-group name="typeout" tag="div" appear>
+        <div
+            v-for="(task, index) in tasks"
+            :key="task.id"
+            class="content-row"
+            :class="{ 'force-exit': task.isExiting, 'is-entering': task.isEntering }"
+            @mouseenter="hoveredId = task.id"
+            @mouseleave="hoveredId = null"
+        >
+          <span style="color: rgb(214,114,119); font-size: 24px; font-weight: 600">task_{{ index + 1 }}</span>
+          <span style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600">:</span>
+          <span style="color: rgb(103,181,103); font-size: 24px; font-weight: 600; margin-left: 10px">"{{
+              task.text
+            }}"</span>
+          <span
+              style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600; align-content: end; padding-right: 15px;">,</span>
 
-          <transition-group name="typeout" tag="div" v-if="tasks.length" appear>
-            <div
-                v-for="(task, index) in tasks"
-                :key="task.id"
-                class="content-row"
-                @mouseenter="hoveredId = task.id"
-                @mouseleave="hoveredId = null"
-            >
-             <span style="color: rgb(214,114,119); font-size: 24px; font-weight: 600">task_{{ index + 1 }}</span>
-             <span style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600">:</span>
-             <span style="color: rgb(103,181,103); font-size: 24px; font-weight: 600; margin-left: 10px">"{{ task.text }}"</span>
-             <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600; align-content: end">,</span>
-
-              <div class="circle-container" :style="{ opacity: hoveredId === task.id ? 1 : 0 }">
-               <div class="clear-circle" @click="removeTask(task.id)"></div>
-             </div>
-            </div>
-          </transition-group>
-
-          <div class="content-row" v-else>
-            <span style="color: rgb(214,114,119); font-size: 24px; font-weight: 600">task</span>
-            <span style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600">:</span>
-            <span style="color: rgb(103,181,103); font-size: 24px; font-weight: 600; margin-left: 10px">"none"</span>
+          <div class="circle-container" :style="{ opacity: hoveredId === task.id ? 1 : 0 }">
+            <div class="clear-circle" @click="removeTask(task.id)"></div>
           </div>
         </div>
+      </transition-group>
+
+      <div class="appendage">
+        <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">]</span>
+        <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">;</span>
       </div>
     </div>
 
     <div class="block-tag" style="margin-top: 20px; width: 140px">
       <span>newTask.js</span>
-      <div class="circle"></div>
+      <div class="circle" style="margin: 0"></div>
     </div>
 
     <div class="small-block">
@@ -116,7 +158,8 @@ const addTask = () => {
         <div class="content-box">
           <div class="start">
             <span style="color: rgb(170, 179, 185); font-size: 24px; font-weight: 600">newToDo</span>
-            <span style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-right: 10px; padding-left: 10px">=</span>
+            <span
+                style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-right: 10px; padding-left: 10px">=</span>
             <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">(</span>
             <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">)</span>
             <span style="color: rgb(68, 177, 249); font-size: 24px; font-weight: 600; padding-left: 10px">=</span>
@@ -124,7 +167,7 @@ const addTask = () => {
             <span style="color: rgb(243, 224, 84); font-size: 24px; font-weight: 600">{</span>
           </div>
 
-          <div class="content-row">
+          <div class="content-row-hoverless">
             <span style="color: rgb(170,179,185); font-size: 24px; font-weight: 600">todo.</span>
             <span style="color: rgb(203,156,107); font-size: 24px; font-weight: 600">add</span>
             <span style="color: rgb(68,177,249); font-size: 24px; font-weight: 600">(</span>
@@ -135,7 +178,7 @@ const addTask = () => {
                   @keyup.enter="addTask"
                   class="stealth-input"
                   :style="{ width: newTaskText.length > 0 ? newTaskText.length + 'ch' : '1px' }"
-                  placeholder=""
+                  maxlength="26"
               />
               <span class="custom-cursor"></span>
 
@@ -185,6 +228,7 @@ const addTask = () => {
   height: 13px;
   border-radius: 100px;
   background-color: rgb(246, 114, 114);
+  margin: 0 20px 0 auto;
 }
 
 .clear-circle {
@@ -192,10 +236,10 @@ const addTask = () => {
   height: 24px;
   border-radius: 100px;
   background-color: rgb(246, 114, 114);
+  margin: 0 20px 0 auto;
 }
 
 .circle-container {
-  margin: 5px 5px 5px 25px;
   display: flex;
   align-content: center;
   opacity: 0;
@@ -208,7 +252,7 @@ const addTask = () => {
 
 .small-block {
   min-width: 450px;
-  max-width: 600px;
+  max-width: 700px;
   min-height: 200px;
   max-height: 300px;
   height: 100%;
@@ -225,7 +269,7 @@ const addTask = () => {
 
 .block {
   min-width: 450px;
-  max-width: 600px;
+  max-width: 700px;
   min-height: 400px;
   max-height: 600px;
   height: 100%;
@@ -237,6 +281,7 @@ const addTask = () => {
   display: flex;
   padding-top: 20px;
   padding-bottom: 20px;
+  flex-flow: column;
 }
 
 .block-content {
@@ -259,10 +304,14 @@ const addTask = () => {
 
 .variable-box {
   display: block;
-  margin-left: auto;
   color: rgb(192, 124, 218);
   font-size: 24px;
   font-weight: 600;
+}
+
+.appendage {
+  margin-right: auto;
+  margin-left: 30px;
 }
 
 .appendage-container {
@@ -276,18 +325,10 @@ const addTask = () => {
   flex-flow: column;
   justify-content: center;
   align-items: flex-start;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   gap: 12px;
   object-fit: contain;
-  object-position: 0% 50%;
-}
-
-.start {
-  display: flex;
-  margin-right: 0;
-  margin-left: 0;
-  align-self: auto;
-  gap: 0;
+  object-position: 0 50%;
 }
 
 .content-row {
@@ -297,6 +338,20 @@ const addTask = () => {
   white-space: nowrap;
   width: 100%;
   border-right: 2px solid transparent;
+  padding-left: 87px;
+}
+
+.content-row-hoverless {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  border-right: 2px solid transparent;
+}
+
+.content-row:hover {
+  background-color: rgba(38, 40, 46, 0.5);
 }
 
 .typeout-enter-active {
@@ -311,13 +366,45 @@ const addTask = () => {
   border-right: 2px solid orange;
 }
 
+.typeout-enter-active .circle-container {
+  display: none;
+}
+
+.typeout-leave-active .circle-container {
+  display: none;
+}
+
 .typeout-move {
   transition: transform 0.5s ease;
 }
 
+.force-exit {
+  pointer-events: none;
+  width: 0;
+  animation: typing 1.5s steps(30, end) reverse forwards;
+  border-right: 2px solid orange;
+  overflow: hidden;
+}
+
+.is-entering {
+  width: 0;
+  animation: typing 1s steps(30, end) forwards;
+  border-right: 2px solid #ffa500;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.is-entering .circle-container {
+  display: none;
+}
+
 @keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 .input-wrapper {
@@ -331,7 +418,7 @@ const addTask = () => {
   outline: none;
   padding: 0;
   margin: 0;
-  color: rgb(103,181,103);
+  color: rgb(103, 181, 103);
   font-family: inherit;
   font-size: 24px;
   font-weight: 600;
@@ -351,7 +438,7 @@ const addTask = () => {
 .fake-placeholder {
   position: relative;
   right: 4px;
-  color: rgba(103,181,103, 0.3);
+  color: rgba(103, 181, 103, 0.3);
   pointer-events: none;
   font-size: 24px;
   font-weight: 600;
@@ -363,8 +450,12 @@ const addTask = () => {
 }
 
 @keyframes blink {
-  from, to { opacity: 1; }
-  50% { opacity: 0; }
+  from, to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .stealth-input:focus + .custom-cursor {
