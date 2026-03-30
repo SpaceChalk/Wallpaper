@@ -193,6 +193,7 @@ const addTask = () => {
             <span style="color: rgb(170,179,185); font-size: 24px; font-weight: 600">todo.</span>
             <span style="color: rgb(203,156,107); font-size: 24px; font-weight: 600">add</span>
             <span style="color: rgb(68,177,249); font-size: 24px; font-weight: 600">(</span>
+            <span style="color: rgb(103,181,103); font-size: 24px; font-weight: 600; display: inline-flex; justify-content: center; width: 7px">'</span>
             <div class="input-wrapper">
 
               <input
@@ -206,6 +207,7 @@ const addTask = () => {
 
               <span v-if="!newTaskText" class="fake-placeholder">...</span>
             </div>
+            <span style="color: rgb(103,181,103); font-size: 24px; font-weight: 600; display: inline-flex; justify-content: center; width: 7px">'</span>
             <span style="color: rgb(68,177,249); font-size: 24px; font-weight: 600">)</span>
           </div>
         </div>
@@ -459,7 +461,7 @@ const addTask = () => {
 
 .fake-placeholder {
   position: relative;
-  right: 4px;
+  right: 5px;
   color: rgba(103, 181, 103, 0.3);
   pointer-events: none;
   font-size: 24px;
