@@ -137,7 +137,37 @@ const year = computed(() => {
       </div>
     </div>
 
+    <div class="block-tag" style="margin-top: 20px; width: 140px">
+      <span>README.md</span>
+      <div class="circle" style="margin: 0; background-color: #44B1F9FF"></div>
+    </div>
 
+    <div class="small-block">
+      <div class="block-content" style="flex-direction: column">
+
+        <div style="display: inline-flex">
+          <span class="description" style="color: #CB9C6BFF">
+            #
+          </span>
+          <span class="description" style="color: #C07CDAFF; font-style: italic">
+           Instruction
+          </span>
+        </div>
+
+        <div style="padding-left: 14px">
+          <span class="description" style="padding-left: 0">
+            1. Hide Desktop Icons manually or with Wallpaper Engine
+          </span>
+        </div>
+
+        <div style="padding-left: 14px">
+          <span class="description" style="padding-left: 0">
+            2. Type task into the function and press enter to confirm
+          </span>
+        </div>
+
+      </div>
+    </div>
   </div>
 </template>
 
@@ -208,6 +238,28 @@ const year = computed(() => {
   gap: 0px;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto;
+}
+
+.small-block {
+  width: 340px;
+  min-height: 200px;
+  max-height: 300px;
+  height: 100%;
+  border-style: solid;
+  border-width: 8px;
+  border-color: rgb(81, 87, 98);
+  border-radius: 25px;
+  align-content: center;
+  display: flex;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-wrap: normal;
+}
+
+.description {
+  padding-left: 14px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .variable-box {

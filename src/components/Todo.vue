@@ -283,7 +283,7 @@ const addTask = () => {
   border-style: solid;
   border-width: 8px;
   border-color: rgb(81, 87, 98);
-  border-radius: 30px;
+  border-radius: 25px;
   align-content: center;
   display: flex;
   padding-top: 20px;

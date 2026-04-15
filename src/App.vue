@@ -7,7 +7,9 @@ import Todo from "@/components/Todo.vue";
   <div>
     <Todo/>
   </div>
-  <Clock/>
+  <div>
+    <Clock/>
+  </div>
 </template>
 
 <style scoped>
